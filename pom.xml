@@ -19,4 +19,11 @@
             <version>4.13</version>
         </dependency>
     </dependencies>
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Avatar Generator</name>
+            <url>https://maven.pkg.github.com/peng49/github-avatar-generator</url>
+        </repository>
+    </distributionManagement>
 </project>
