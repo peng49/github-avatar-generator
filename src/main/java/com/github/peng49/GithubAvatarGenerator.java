@@ -58,7 +58,7 @@ public class GithubAvatarGenerator {
     }
 
     private int getImageWidth() {
-        return this.imageWidth >= 0 ? this.imageWidth : DEFAULT_IMAGE_WIDTH;
+        return this.imageWidth > 0 ? this.imageWidth : DEFAULT_IMAGE_WIDTH;
     }
 
     private int getImageHeight() {
@@ -67,7 +67,7 @@ public class GithubAvatarGenerator {
 
 
     private int getFrameWidth() {
-        return this.frameWidth >= 0 ? this.frameWidth : DEFAULT_AVATAR_FRAME_WIDTH;
+        return this.frameWidth > 0 ? this.frameWidth : DEFAULT_AVATAR_FRAME_WIDTH;
     }
 
     private Color getBackground() {
@@ -95,48 +95,6 @@ public class GithubAvatarGenerator {
         return (getAvatarVertexWidth() - 1) / 2;
     }
 
-
-    /**
-     * 获取一个随机填充对称矩阵
-     *
-     * @return 随机填充对称矩阵
-     */
-    private boolean[][] getAvatarVertex() {
-
-        int vertexWidth = getAvatarVertexWidth();
-        int middleColumn = getMiddleColumn();
-
-        // 新建矩阵
-        boolean[][] vertex = new boolean[vertexWidth][vertexWidth];
-
-        // 先随机填充中间一条
-        Random random = new Random();
-        for (int i = 0; i < vertexWidth; i++) {
-            if (random.nextBoolean()) {
-                vertex[i][middleColumn] = true;
-            }
-        }
-
-        // 随机填充半边
-        for (int i = 0; i < vertexWidth; i++) {
-            for (int j = 0; j < middleColumn; j++) {
-                if (random.nextBoolean()) {
-                    vertex[i][j] = true;
-                }
-            }
-        }
-
-        // 将填充的半边对称复制到另外半边
-        for (int i = 0; i < vertexWidth; i++) {
-            for (int j = middleColumn + 1; j < vertexWidth; j++) {
-                vertex[i][j] = vertex[i][vertexWidth - 1 - j];
-            }
-        }
-
-        return vertex;
-    }
-
-
     /**
      * 获取一个随机头像
      *
@@ -152,8 +110,6 @@ public class GithubAvatarGenerator {
         ig2.setColor(this.getBackground());
         ig2.fillRect(0, 0, this.getImageWidth(), this.getImageHeight());
 
-        boolean[][] vertex = getAvatarVertex();
-
         Color color = new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255));
 
         int vertexWidth = getAvatarVertexWidth();
@@ -161,7 +117,7 @@ public class GithubAvatarGenerator {
 
         //填充中间一列的颜色
         for (int i = 0; i < vertexWidth; i++) {
-            if (vertex[i][middleColumn]) {
+            if (random.nextBoolean()) {
                 ig2.setColor(color);
                 ig2.fillRect(
                         this.getFrameWidth() + middleColumn * this.getAvatarBlockWidth(),
@@ -175,7 +131,7 @@ public class GithubAvatarGenerator {
         //填充前两列的颜色
         for (int i = 0; i < vertexWidth; i++) {
             for (int j = 0; j < middleColumn; j++) {
-                if (vertex[j][i]) {
+                if (random.nextBoolean()) {
                     ig2.setColor(color);
                     ig2.fillRect(
                             this.getFrameWidth() + j * this.getAvatarBlockWidth(),

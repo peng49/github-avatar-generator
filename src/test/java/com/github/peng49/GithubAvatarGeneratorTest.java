@@ -12,10 +12,7 @@ public class GithubAvatarGeneratorTest {
 
     @Test
     public void getARandomAvatarTest() throws IOException {
-        GithubAvatarGenerator avatarGenerator = new GithubAvatarGenerator()
-                .setImageWidth(500)
-                .setFrameWidth(25)
-                .setVertexWidth(15);
+        GithubAvatarGenerator avatarGenerator = new GithubAvatarGenerator();
 
         for (int i = 0; i < 20; i++) {
             BufferedImage avatar = avatarGenerator.getARandomAvatar();
