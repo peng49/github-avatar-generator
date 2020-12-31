@@ -12,8 +12,13 @@ public class GithubAvatarGeneratorTest {
 
     @Test
     public void getARandomAvatarTest() throws IOException {
+        GithubAvatarGenerator avatarGenerator = new GithubAvatarGenerator()
+                .setImageWidth(500)
+                .setFrameWidth(25)
+                .setVertexWidth(15);
+
         for (int i = 0; i < 20; i++) {
-            BufferedImage avatar = new GithubAvatarGenerator().getARandomAvatar();
+            BufferedImage avatar = avatarGenerator.getARandomAvatar();
             String filename = UUID.randomUUID() + ".png";
             File file = new File("./" + filename);
             ImageIO.write(avatar, "PNG", file);

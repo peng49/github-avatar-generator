@@ -5,59 +5,77 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 public class GithubAvatarGenerator {
-    /**
-     * 头像长宽
-     */
-    private int length = 420;
+    //默认外围宽度
+    private static final int DEFAULT_AVATAR_FRAME_WIDTH = 35;
 
-    /**
-     * 背景颜色
-     */
-    private Color background = new Color(230, 230, 230);
+    //默认图片宽度
+    private static final int DEFAULT_IMAGE_WIDTH = 420;
 
-    public int getLength() {
-        return length;
-    }
-
-    public void setLength(int length) {
-        this.length = length;
-    }
-
-    public Color getBackground() {
-        return background;
-    }
-
-    public void setBackground(Color background) {
-        this.background = background;
-    }
-
-
-    // 选出一些大概会比较好看的颜色池用于生成
-    private static final int[][] COLOR_POOL_RGB = new int[][]{
-            {170, 205, 102},
-            {159, 255, 84},
-            {209, 206, 0},
-            {255, 255, 0},
-            {47, 107, 85},
-            {47, 255, 173},
-            {0, 173, 205},
-            {8, 101, 139},
-            {180, 180, 238},
-            {106, 106, 255},
-            {155, 211, 255},
-            {204, 50, 153},
-            {101, 119, 139}
-    };
-    // 外围宽度
-    private static final int AVATAR_FRAME_WIDTH = 35;
-
+    //默认背景颜色
+    private static final Color DEFAULT_BACKGROUND = new Color(230, 230, 230);
 
     // Vertex 大小
     private static final int AVATAR_VERTEX_WIDTH = 7;
 
+    /**
+     * 头像宽
+     */
+    private int imageWidth;
+
+    /**
+     * 外围宽度
+     */
+    private int frameWidth;
+
+    /**
+     * 背景颜色
+     */
+    private Color background;
+
+    private int vertexWidth;
+
+    public GithubAvatarGenerator setImageWidth(int imageWidth) {
+        this.imageWidth = imageWidth;
+        return this;
+    }
+
+    public GithubAvatarGenerator setFrameWidth(int frameWidth) {
+        this.frameWidth = frameWidth;
+        return this;
+    }
+
+    public GithubAvatarGenerator setBackground(Color background) {
+        this.background = background;
+        return this;
+    }
+
+    public GithubAvatarGenerator setVertexWidth(int vertexWidth) {
+        if (vertexWidth <= 1 || vertexWidth % 2 == 0) {
+            throw new RuntimeException("vertexWidth 必须是一个大于1的奇数");
+        }
+        this.vertexWidth = vertexWidth;
+        return this;
+    }
+
+    private int getImageWidth() {
+        return this.imageWidth >= 0 ? this.imageWidth : DEFAULT_IMAGE_WIDTH;
+    }
+
+    private int getImageHeight() {
+        return this.getImageWidth();
+    }
+
+
+    private int getFrameWidth() {
+        return this.frameWidth >= 0 ? this.frameWidth : DEFAULT_AVATAR_FRAME_WIDTH;
+    }
+
+    private Color getBackground() {
+        return background != null ? background : DEFAULT_BACKGROUND;
+    }
 
     private int getAvatarBlockWidth() {
-        return (this.getLength() - AVATAR_FRAME_WIDTH * 2) / this.getAvatarVertexWidth();
+        return (this.getImageWidth() - this.getFrameWidth() * 2) / this.getAvatarVertexWidth();
     }
 
     private int getAvatarBlockHeight() {
@@ -65,22 +83,23 @@ public class GithubAvatarGenerator {
     }
 
     private int getAvatarVertexWidth() {
-        return AVATAR_VERTEX_WIDTH;
+        return this.vertexWidth > 0 ? this.vertexWidth : AVATAR_VERTEX_WIDTH;
     }
 
     /**
-     * 中间列数
-     * @return
+     * 获取中间列数
+     *
+     * @return 矩阵的中间列数
      */
-    private int getMiddleColumn(){
+    private int getMiddleColumn() {
         return (getAvatarVertexWidth() - 1) / 2;
     }
 
 
     /**
-     * 获取一个 5x5 的随机填充对称矩阵
+     * 获取一个随机填充对称矩阵
      *
-     * @return 5x5 随机填充对称矩阵
+     * @return 随机填充对称矩阵
      */
     private boolean[][] getAvatarVertex() {
 
@@ -124,14 +143,14 @@ public class GithubAvatarGenerator {
      * @return BufferedImage bi
      */
     public BufferedImage getARandomAvatar() {
-        BufferedImage bi = new BufferedImage(this.getLength(), this.getLength(), BufferedImage.TYPE_INT_ARGB);
+        BufferedImage bi = new BufferedImage(this.getImageWidth(), this.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D ig2 = bi.createGraphics();
 
         Random random = new Random();
 
         //设置背景颜色
         ig2.setColor(this.getBackground());
-        ig2.fillRect(0, 0, this.getLength(), this.getLength());
+        ig2.fillRect(0, 0, this.getImageWidth(), this.getImageHeight());
 
         boolean[][] vertex = getAvatarVertex();
 
@@ -142,12 +161,11 @@ public class GithubAvatarGenerator {
 
         //填充中间一列的颜色
         for (int i = 0; i < vertexWidth; i++) {
-            System.out.println(AVATAR_FRAME_WIDTH + middleColumn * this.getAvatarBlockWidth());
             if (vertex[i][middleColumn]) {
                 ig2.setColor(color);
                 ig2.fillRect(
-                        AVATAR_FRAME_WIDTH + middleColumn * this.getAvatarBlockWidth(),
-                        AVATAR_FRAME_WIDTH + i * this.getAvatarBlockHeight(),
+                        this.getFrameWidth() + middleColumn * this.getAvatarBlockWidth(),
+                        this.getFrameWidth() + i * this.getAvatarBlockHeight(),
                         this.getAvatarBlockWidth(),
                         this.getAvatarBlockHeight()
                 );
@@ -160,16 +178,16 @@ public class GithubAvatarGenerator {
                 if (vertex[j][i]) {
                     ig2.setColor(color);
                     ig2.fillRect(
-                            AVATAR_FRAME_WIDTH + j * this.getAvatarBlockWidth(),
-                            AVATAR_FRAME_WIDTH + i * this.getAvatarBlockHeight(),
+                            this.getFrameWidth() + j * this.getAvatarBlockWidth(),
+                            this.getFrameWidth() + i * this.getAvatarBlockHeight(),
                             this.getAvatarBlockWidth(),
                             this.getAvatarBlockHeight()
                     );
 
                     //填充对称位置
                     ig2.fillRect(
-                            AVATAR_FRAME_WIDTH + (vertexWidth - 1 - j) * this.getAvatarBlockWidth(),
-                            AVATAR_FRAME_WIDTH + i * this.getAvatarBlockHeight(),
+                            this.getFrameWidth() + (vertexWidth - 1 - j) * this.getAvatarBlockWidth(),
+                            this.getFrameWidth() + i * this.getAvatarBlockHeight(),
                             this.getAvatarBlockWidth(),
                             this.getAvatarBlockHeight()
                     );
