@@ -11,11 +11,11 @@ import java.util.UUID;
 public class GithubAvatarGeneratorTest {
 
     @Test
-    public void getARandomAvatarTest() throws IOException {
+    public void getAvatarBufferedImageTest() throws IOException {
         GithubAvatarGenerator avatarGenerator = new GithubAvatarGenerator();
 
         for (int i = 0; i < 20; i++) {
-            BufferedImage avatar = avatarGenerator.getARandomAvatar();
+            BufferedImage avatar = avatarGenerator.getAvatarBufferedImage();
             String filename = UUID.randomUUID() + ".png";
             File file = new File("./" + filename);
             ImageIO.write(avatar, "PNG", file);

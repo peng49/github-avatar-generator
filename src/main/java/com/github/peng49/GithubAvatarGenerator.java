@@ -100,7 +100,7 @@ public class GithubAvatarGenerator {
      *
      * @return BufferedImage bi
      */
-    public BufferedImage getARandomAvatar() {
+    public BufferedImage getAvatarBufferedImage() {
         BufferedImage bi = new BufferedImage(this.getImageWidth(), this.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D ig2 = bi.createGraphics();
 

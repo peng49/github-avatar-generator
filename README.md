@@ -26,7 +26,7 @@
             GithubAvatarGenerator avatarGenerator = new GithubAvatarGenerator();
             
             //获取一个BufferedImage对象
-            BufferedImage avatar = avatarGenerator.getARandomAvatar();
+            BufferedImage avatar = avatarGenerator.getAvatarBufferedImage();
         
             //通过 BufferedImage 对象生成一个PNG文件            
             String filename = UUID.randomUUID() + ".png";
