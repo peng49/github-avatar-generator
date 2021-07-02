@@ -16,11 +16,11 @@ public class GithubAvatarGeneratorTest {
 
         for (int i = 0; i < 20; i++) {
             BufferedImage avatar = avatarGenerator.getAvatarBufferedImage();
-            String filename = UUID.randomUUID() + ".png";
-            File file = new File("./" + filename);
-            ImageIO.write(avatar, "PNG", file);
+//            String filename = UUID.randomUUID() + ".png";
+//            File file = new File("./" + filename);
+//            ImageIO.write(avatar, "PNG", file);
 
-            System.out.println(filename);
+//            System.out.println(filename);
         }
     }
 }
